@@ -12,8 +12,6 @@ import Layout from "./components/shared/Layout";
 import { InvestmentInital, InvTypes } from "./interfaces/index";
 import InvesmentData from "./hooks/InvestmentData";
 
-import netlifyIdentity from "netlify-identity-widget";
-
 interface InvesmentDataInt {
   tableValues: InvTypes[];
   addInvesment: (form: InvestmentInital) => void;
@@ -47,14 +45,6 @@ const App = () => {
     <Layout>
       {!isLoading && (
         <>
-          <RefreshIcon
-            onClick={() => {
-              netlifyIdentity.open();
-              netlifyIdentity.on("login", (user) => {
-                console.log(user);
-              });
-            }}
-          />
           <CurrencySelector refresh={refreshInvesment} />
           {tableValues.length > 0 && (
             <>
