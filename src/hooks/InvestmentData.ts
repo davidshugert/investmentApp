@@ -32,7 +32,6 @@ export default function () {
     setLoading(true);
     let builtInvestments: (Fixed | Variable)[] = buildAll();
     if (builtInvestments.length > 0) {
-      console.log("isRefreshing");
       const allProperties = await fetchAllProperties(builtInvestments);
       setTableValues(convertPrices(allProperties));
       setLoading(false);
@@ -114,5 +113,6 @@ export default function () {
     deleteInvesment,
     refreshInvesment,
     isLoading,
+    investments,
   };
 }

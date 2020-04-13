@@ -28,3 +28,15 @@ export const getCryptoSymbols = async () => {
   );
   return response.data;
 };
+export const getUserData = async () => {
+  console.log("getting user Data");
+  return;
+};
+export const saveUserDate = async (user: object) => {
+  console.log("saving user Data");
+  console.log(user);
+  const response = await backend.get<{ symbol: string; name: string }[]>(
+    `/user/save`
+  );
+  return response.data;
+};
