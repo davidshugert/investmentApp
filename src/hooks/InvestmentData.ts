@@ -91,6 +91,10 @@ export default function () {
     return allProperties;
   };
   useEffect(() => {
+    if (typeof investments === "undefined") {
+      setInvestments([]);
+      return;
+    }
     let builtInvestments: (
       | Fixed
       | Variable
@@ -114,5 +118,6 @@ export default function () {
     refreshInvesment,
     isLoading,
     investments,
+    setInvestments,
   };
 }

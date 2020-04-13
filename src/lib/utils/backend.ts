@@ -6,8 +6,4 @@ const config = {
   },
 };
 const backend = axios.create(config);
-export function changeCurrency(currencySymbol: string) {
-  backend.defaults.params = {};
-  backend.defaults.params["currency"] = currencySymbol;
-}
 export default backend;

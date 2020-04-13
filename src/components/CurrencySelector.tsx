@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Select, MenuItem, InputLabel } from "@material-ui/core";
 import getCachedData from "../hooks/getCachedData";
 import { getCurrencyRates } from "../lib/utils/index";
-// import { changeCurrency } from "../lib/utils/backend";
 import stickyValue from "../hooks/stickyValue";
 
 const CurrencyContainer = styled.div`
@@ -16,7 +15,6 @@ export default function (props: CurrencySelectorInterface) {
   const rates = getCachedData(getCurrencyRates, "rates", 60);
   const [currency, setCurrency] = stickyValue("USD", "userCurrency");
   useEffect(() => {
-    // changeCurrency(currency);
   }, [currency, props]);
   return (
     <CurrencyContainer>

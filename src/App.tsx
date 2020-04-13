@@ -1,15 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import {
-  Fab,
-  Box,
-  Backdrop,
-  CircularProgress,
-  Button,
-} from "@material-ui/core";
+import { Fab, Box, Backdrop, CircularProgress } from "@material-ui/core";
+
 import InvestmentTable from "./components/Table";
 import NewInvestment from "./components/NewInvestment/index";
 import Charts from "./components/Chart";
+import UserOptions from "./components/UserOptions";
 import CurrencySelector from "./components/CurrencySelector";
 import Summary from "./components/Summary";
 import Layout from "./components/shared/Layout";
@@ -24,6 +20,7 @@ interface InvesmentDataInt {
   addInvesment: (form: InvestmentInital) => void;
   deleteInvesment: (index: number) => void;
   refreshInvesment: () => void;
+  setInvestments: any;
   isLoading: boolean;
 }
 const App = () => {
@@ -42,6 +39,7 @@ const App = () => {
     refreshInvesment,
     isLoading,
     investments,
+    setInvestments,
   }: InvesmentDataInt = InvesmentData();
 
   const summary = tableValues.reduce(
@@ -61,16 +59,6 @@ const App = () => {
     <Layout>
       {!(isLoading || !firebaseInitialized) && (
         <>
-          <Button
-            color="default"
-            variant="contained"
-            onClick={() => {
-              console.log(firebase.isSignedIn);
-              console.log(firebase.auth.currentUser);
-            }}
-          >
-            info
-          </Button>
           <Box
             display="flex"
             justifyContent="space-between"
@@ -78,40 +66,13 @@ const App = () => {
             alignItems="center"
           >
             <CurrencySelector refresh={refreshInvesment} />
-            <Box display={firebase.isSignedIn}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={async () => {
-                  console.log(investments);
-                  const response: any = await firebase.saveInvestments(
-                    investments
-                  );
-                  console.log(response);
-                }}
-              >
-                Save Investments
-              </Button>
-              <Button
-                color="default"
-                variant="contained"
-                onClick={async () => {
-                  const response: any = await firebase.getInvestments();
-                  console.log(response);
-                }}
-              >
-                Get Investments
-              </Button>
+            <Box display={firebase.isSignedIn ? "inline" : "none"}>
+              <UserOptions {...{ investments, setInvestments, firebase }} />
             </Box>
           </Box>
           {tableValues.length > 0 && (
             <>
-              <Box
-                display="flex"
-                justifyContent={tableValues.length ? "flex-start" : "center"}
-                mr={3}
-                mb={1}
-              >
+              <Box mr={3} mb={1}>
                 <Fab color="primary" aria-label="refresh" size="medium">
                   <RefreshIcon onClick={refreshInvesment} />
                 </Fab>
@@ -134,7 +95,7 @@ const App = () => {
           {tableValues.length > 0 && (
             <Box display="flex">
               <Summary values={summary} />
-              <Charts values={summary} />
+              <Charts values={summary} allValues={tableValues} />
             </Box>
           )}
         </>

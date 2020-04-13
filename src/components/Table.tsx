@@ -8,11 +8,7 @@ import {
   TableRow,
   Paper,
 } from "@material-ui/core";
-import {
-  withStyles,
-  Theme,
-  createStyles
-} from "@material-ui/core/styles";
+import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
 import CloseSharpIcon from "@material-ui/icons/CloseSharp";
 import {
   FixedInvesmentProperties,
@@ -72,13 +68,21 @@ export default function (props: TableData) {
       return "N/A";
     }
   };
+  const getVariableName = (row: any) => {
+    if (row.variableType === "crypto") {
+      return `Crypto - ${row.name.substring(0, row.name.length - 3)}`;
+    }
+    return `Stock - ${row.name}`;
+  };
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             {header.map((headCell) => (
-              <StyledTableCell key={headCell}>{headCell}</StyledTableCell>
+              <StyledTableCell key={headCell} align="center">
+                {headCell}
+              </StyledTableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -86,22 +90,24 @@ export default function (props: TableData) {
           {props.values.map((row, idx) => (
             <StyledTableRow key={row.name}>
               <TableCell component="th" scope="row">
-                {row.invesmentType.toUpperCase()}
+                {row.invesmentType}
               </TableCell>
-              <TableCell align="right">{row.name}</TableCell>
-              <TableCell align="right">{row.quantity}</TableCell>
-              <TableCell align="right">
+              <TableCell align="center">
+                {row.invesmentType == "fixed" ? row.name : getVariableName(row)}
+              </TableCell>
+              <TableCell align="center">{row.quantity}</TableCell>
+              <TableCell align="center">
                 {formatter.format(row.initalUnitaryPrice)}
               </TableCell>
-              <TableCell align="right">
+              <TableCell align="center">
                 {formatter.format(row.finalUnitaryPrice!)}
               </TableCell>
-              <TableCell align="right">
+              <TableCell align="center">
                 {formatter.format(row.profit!)}
               </TableCell>
-              <TableCell align="right">{row.startingDate}</TableCell>
-              <TableCell align="right">{getEndingDate(row)}</TableCell>
-              <TableCell align="right">
+              <TableCell align="center">{row.startingDate}</TableCell>
+              <TableCell align="center">{getEndingDate(row)}</TableCell>
+              <TableCell align="center">
                 <CloseSharpIcon
                   fontSize="default"
                   color="secondary"
