@@ -6,14 +6,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  Paper
 } from "@material-ui/core";
 import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
 import CloseSharpIcon from "@material-ui/icons/CloseSharp";
 import {
   FixedInvesmentProperties,
-  VariableInvesmentProperties,
+  VariableInvesmentProperties
 } from "../interfaces";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const header: string[] = [
   "Type",
@@ -24,7 +25,7 @@ const header: string[] = [
   "Profit",
   "Starting Date",
   "Ending Date",
-  "Delete",
+  "Delete"
 ];
 
 interface TableData {
@@ -36,9 +37,9 @@ const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
       "&:nth-of-type(even)": {
-        backgroundColor: theme.palette.background.default,
-      },
-    },
+        backgroundColor: theme.palette.background.default
+      }
+    }
   })
 )(TableRow);
 
@@ -46,19 +47,19 @@ const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
       backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
+      color: theme.palette.common.white
     },
     body: {
-      fontSize: 14,
-    },
+      fontSize: 14
+    }
   })
 )(TableCell);
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "USD",
+  currency: "USD"
 });
-export default function (props: TableData) {
+export default function(props: TableData) {
   const getEndingDate = (
     row: VariableInvesmentProperties | FixedInvesmentProperties
   ) => {
@@ -74,12 +75,14 @@ export default function (props: TableData) {
     }
     return `Stock - ${row.name}`;
   };
+
+  const matches = useMediaQuery("(min-width:800px)");
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={matches ? Paper : "div"}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            {header.map((headCell) => (
+            {header.map(headCell => (
               <StyledTableCell key={headCell} align="center">
                 {headCell}
               </StyledTableCell>
@@ -88,12 +91,14 @@ export default function (props: TableData) {
         </TableHead>
         <TableBody>
           {props.values.map((row, idx) => (
-            <StyledTableRow key={row.name}>
+            <StyledTableRow key={row.name + "" + idx}>
               <TableCell component="th" scope="row">
                 {row.invesmentType}
               </TableCell>
               <TableCell align="center">
-                {row.invesmentType == "fixed" ? row.name : getVariableName(row)}
+                {row.invesmentType === "fixed"
+                  ? row.name
+                  : getVariableName(row)}
               </TableCell>
               <TableCell align="center">{row.quantity}</TableCell>
               <TableCell align="center">
@@ -102,7 +107,10 @@ export default function (props: TableData) {
               <TableCell align="center">
                 {formatter.format(row.finalUnitaryPrice!)}
               </TableCell>
-              <TableCell align="center">
+              <TableCell
+                align="center"
+                style={{ color: row.profit! > 0 ? "green" : "red" }}
+              >
                 {formatter.format(row.profit!)}
               </TableCell>
               <TableCell align="center">{row.startingDate}</TableCell>

@@ -10,8 +10,8 @@ export interface InvestmentInital {
   quantity: number;
   initalPrice: number;
   finalPrice: number;
-  startingDate: string ;
-  endingDate: string ;
+  startingDate: string;
+  endingDate: string;
 }
 
 export interface InvesmentInterface {
@@ -31,4 +31,23 @@ export interface FixedInvesmentProperties extends InvesmentInterface {
 }
 export interface VariableInvesmentProperties extends InvesmentInterface {
   variableType: VariableType;
+}
+
+interface summaryNumberTypes {
+  fixed: number;
+  variable: number;
+  crypto: number;
+  stock: number;
+}
+export interface SummaryData {
+  initial: number;
+  current: number;
+  profit: number;
+  initialPrices: summaryNumberTypes;
+  finalPrices: summaryNumberTypes;
+  percentage: {
+    percentage: number;
+    initial: summaryNumberTypes;
+    final: summaryNumberTypes;
+  };
 }

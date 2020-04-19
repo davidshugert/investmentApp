@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import stickyValue from "./stickyValue";
 import { Variable, Fixed } from "../lib/index";
 import { parse } from "date-fns";
+import { snackbarService } from "uno-material-ui";
 
 export default function () {
   const [tableValues, setTableValues] = useState<InvTypes[]>([]);
@@ -18,22 +19,33 @@ export default function () {
 
   async function addInvesment(form: InvestmentInital) {
     setLoading(true);
-    if (userCurrency() !== "USD") {
-      const currentCurrency = userCurrency();
-      form.initalPrice = form.initalPrice / rates.rates[currentCurrency];
-      form.finalPrice = form.finalPrice / rates.rates[currentCurrency];
+    try {
+      if (userCurrency() !== "USD") {
+        const currentCurrency = userCurrency();
+        form.initalPrice = form.initalPrice / rates.rates[currentCurrency];
+        form.finalPrice = form.finalPrice / rates.rates[currentCurrency];
+      }
+      let newInvesment: Variable | Fixed = buildInvestment(form);
+      const properties = await newInvesment.getProperties();
+      setInvestments([...investments, properties]);
+    } catch (error) {
+      snackbarService.showSnackbar(
+        `Unable to find investment ${form.invesmentType} - ${form.name}`,
+        "error"
+      );
     }
-    let newInvesment: Variable | Fixed = buildInvestment(form);
-    const properties = await newInvesment.getProperties();
-    setInvestments([...investments, properties]);
     setLoading(false);
   }
   async function refreshInvesment() {
     setLoading(true);
     let builtInvestments: (Fixed | Variable)[] = buildAll();
     if (builtInvestments.length > 0) {
-      const allProperties = await fetchAllProperties(builtInvestments);
-      setTableValues(convertPrices(allProperties));
+      try {
+        const allProperties = await fetchAllProperties(builtInvestments);
+        setTableValues(convertPrices(allProperties));
+      } catch (error) {
+        snackbarService.showSnackbar(`Unable to refresh Investments`, "error");
+      }
       setLoading(false);
     }
   }
@@ -102,8 +114,12 @@ export default function () {
     if (builtInvestments.length > 0) {
       (async () => {
         setLoading(true);
-        const allProperties = await fetchAllProperties(builtInvestments);
-        setTableValues(convertPrices(allProperties));
+        try {
+          const allProperties = await fetchAllProperties(builtInvestments);
+          setTableValues(convertPrices(allProperties));
+        } catch (error) {
+          snackbarService.showSnackbar(`Unable to build Investments`, "error");
+        }
         setLoading(false);
       })();
     } else {

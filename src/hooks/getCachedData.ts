@@ -1,4 +1,5 @@
 import stickyValue from "./stickyValue";
+import { snackbarService } from "uno-material-ui";
 
 export default function (
   func: () => any,
@@ -8,8 +9,12 @@ export default function (
   const [data, setData] = stickyValue(null, name);
 
   async function fetchData() {
-    const response = await func();
-    setData(response);
+    try {
+      const response = await func();
+      setData(response);
+    } catch (error) {
+      snackbarService.showSnackbar("Error while fetching data", "error");
+    }
   }
   if (!data) {
     fetchData();
