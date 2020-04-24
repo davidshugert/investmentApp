@@ -130,7 +130,7 @@ const NavBar: React.FunctionComponent = () => {
                 </React.Fragment>
               }
             >
-              <HelpIcon />
+              <HelpIcon style={{marginRight:'8px'}}/>
             </HtmlTooltip>
             {firebase.isSignedIn ? (
               <Button
